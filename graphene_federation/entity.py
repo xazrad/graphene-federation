@@ -27,7 +27,7 @@ def get_entity_query(auto_camelcase):
     class EntityQuery:
         entities = graphene.List(get_entity_cls(), name="_entities", representations=List(_Any))
 
-        def resolve_entities(parent, info, representations):
+        async def resolve_entities(parent, info, representations):
             entities = []
             for representation in representations:
                 model = custom_entities[representation["__typename"]]
@@ -44,7 +44,7 @@ def get_entity_query(auto_camelcase):
                 except AttributeError:
                     pass
                 else:
-                    model_instance = resolver(model_instance, info)
+                    model_instance = await resolver(model_instance, info)
 
                 entities.append(model_instance)
             return entities
